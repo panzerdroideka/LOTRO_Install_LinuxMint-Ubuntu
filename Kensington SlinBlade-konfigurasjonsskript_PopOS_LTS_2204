@@ -1,0 +1,46 @@
+Utmerket! Dette er den perfekte måten å avslutte på. En god løsning er bare halvparten av jobben – den andre halvparten er å sikre at den kan gjentas.
+
+Her er et enkelt og robust backup-skript som gjør alle de tingene vi har testet. Hvis du noen gang må installere Pop!_OS på nytt, eller endringene forsvinner av en eller annen grunn, kan du kjøre dette skriptet, og det vil tilbakestille og tilordne alle knappene på nytt.
+
+Kopier og lim inn hele blokken under i terminalen og trykk enter.
+
+Kensington SlimBlade-konfigurasjonskript
+
+Bash
+
+#!/bin/bash
+
+# --- Steg 1: Rydder opp gamle konfigurasjoner ---
+# Fjerner tidligere feilslåtte .desktop-filer og systemd-tjenester for å unngå konflikter.
+echo "Fjerner tidligere konfigurasjonsfiler..."
+rm -f ~/.config/autostart/kensington-remapper.desktop
+rm -f ~/.config/systemd/user/kensington_fix.service
+sudo rm -f /etc/systemd/system/kensington_fix.service
+sudo rm -f /usr/local/bin/kensington_fix.sh
+
+# Sikrer at autostart-mappen eksisterer
+mkdir -p ~/.config/autostart/
+
+# --- Steg 2: Lager autostart-filen med den endelige, fungerende kommandoen ---
+# Denne kommandoen lager en .desktop-fil som kjøres automatisk ved innlogging.
+# Den venter 10 sekunder for å sikre at systemet er fullt lastet før den tilordner knappene.
+echo "Lager ny autostart-fil med endelig konfigurasjon..."
+cat > ~/.config/autostart/kensington-remapper.desktop << EOF
+[Desktop Entry]
+Type=Application
+Exec=/bin/bash -c "sleep 10 && xinput set-button-map 10 1 3 1 4 5 6 7 8"
+Hidden=false
+NoDisplay=false
+Name=Kensington Remapper
+Comment=Applies custom button mapping for Kensington SlimBlade Pro Trackball
+EOF
+
+# --- Steg 3: Fullfører prosessen og gir tilbakemelding ---
+# Går ut av skriptet med en suksessmelding.
+echo "Konfigurasjonen er fullført!"
+echo "Du må starte datamaskinen på nytt for at endringene skal tre i kraft."
+exit 0
+
+Du kan enten lime inn hele koden direkte i terminalen, eller du kan lagre den som en fil, for eksempel kensington_backup.sh, og kjøre den med bash kensington_backup.sh.
+
+Dette skriptet automatiserer hele prosessen vi har vært gjennom, og sikrer at du alltid kan sette opp trackballen din perfekt på få sekunder.
